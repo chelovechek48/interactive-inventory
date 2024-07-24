@@ -1,12 +1,50 @@
 <script setup>
+import { ref, onBeforeMount } from 'vue';
+import InventoryField from '@components/InventoryField.vue';
 
+import inventoryItemsDataDefault from '@json/items';
+
+const inventorySlotsData = {
+  max: 25,
+};
+
+const inventoryList = ref(Array.from(
+  { length: inventorySlotsData.max },
+  (_, index) => (
+    { id: index }
+  ),
+));
+
+const setInventoryField = () => {
+  let inventoryItemsData = JSON.parse(localStorage.getItem('items'));
+  if (!inventoryItemsData) {
+    inventoryItemsData = inventoryItemsDataDefault;
+    localStorage.setItem('items', JSON.stringify(inventoryItemsDataDefault));
+  }
+
+  inventoryItemsData.forEach((inventoryItem) => {
+    const { id, ...properties } = inventoryItem;
+    inventoryList.value[id] = {
+      id,
+      properties,
+    };
+  });
+};
+
+onBeforeMount(() => {
+  setInventoryField();
+});
 </script>
 
 <template>
   <main class="page">
     <div class="page__container">
       <section class="page__item" style="grid-area: modal" />
-      <section class="page__item" style="grid-area: field" />
+      <InventoryField
+        class="page__item"
+        style="grid-area: field"
+        :list="inventoryList"
+      />
       <section class="page__item" style="grid-area: alert" />
     </div>
   </main>
@@ -49,8 +87,10 @@
 
   &__item {
     background-color: colors.$ui;
-    height: 20rem;
+    min-height: 5rem;
     border-radius: 0.75rem;
+    overflow: hidden;
+    border: 1px solid colors.$border;
   }
 }
 </style>
