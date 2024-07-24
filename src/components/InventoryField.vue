@@ -22,6 +22,9 @@ const props = defineProps({
         margin="0.375rem"
         :color="item.properties.color"
       />
+      <span v-if="item.properties" class="field__count">
+        {{ item.properties.count }}
+      </span>
     </li>
   </ul>
 </template>
@@ -35,11 +38,29 @@ const props = defineProps({
   gap: 1px;
 
   &__item {
-    --padding: 20%;
-
+    position: relative;
     display: flex;
     aspect-ratio: 1;
     box-shadow: 0 0 0 1px colors.$border;
+
+    --padding: 20%;
+  }
+
+  &__count {
+    color: #7d7d7d;
+
+    width: 1.25rem;
+    height: 1.25rem;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    border-top-left-radius: 0.75rem;
+    box-shadow: inherit;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>
