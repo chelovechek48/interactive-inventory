@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onBeforeMount } from 'vue';
 import InventoryField from '@components/InventoryField.vue';
+import LazySkeleton from '@components/LazySkeleton.vue';
 
 import inventoryItemsDataDefault from '@json/items';
 
@@ -45,7 +46,9 @@ onBeforeMount(() => {
         style="grid-area: field"
         :list="inventoryList"
       />
-      <section class="page__item" style="grid-area: alert" />
+      <aside class="page__item page__alert" style="grid-area: alert">
+        <LazySkeleton size="large" />
+      </aside>
     </div>
   </main>
 </template>
@@ -87,10 +90,13 @@ onBeforeMount(() => {
 
   &__item {
     background-color: colors.$ui;
-    min-height: 5rem;
     border-radius: 0.75rem;
     overflow: hidden;
     border: 1px solid colors.$border;
+  }
+
+  &__alert {
+    padding: 1rem;
   }
 }
 </style>
