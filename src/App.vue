@@ -6,12 +6,10 @@ import LazySkeleton from '@components/LazySkeleton.vue';
 
 import inventoryItemsDataDefault from '@json/items';
 
-const inventorySlotsData = {
-  max: 25,
-};
+const inventorySlotsCount = 25;
 
 const inventoryList = ref(Array.from(
-  { length: inventorySlotsData.max },
+  { length: inventorySlotsCount },
   (_, index) => (
     { id: index }
   ),
@@ -62,7 +60,9 @@ onBeforeMount(() => {
         class="page__item"
         style="grid-area: field"
         :list="inventoryList"
+        :slots-count="inventorySlotsCount"
         @changeFocus="selectedItem = $event"
+        @updateInventoryField="inventoryList = $event"
       />
       <aside class="page__item page__alert" style="grid-area: alert">
         <LazySkeleton size="large" />

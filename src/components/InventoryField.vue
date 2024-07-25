@@ -2,21 +2,67 @@
 import { ref, onMounted, onUpdated } from 'vue';
 import ItemPicture from '@components/ItemPicture.vue';
 
-const emit = defineEmits(['changeFocus']);
+const emit = defineEmits(['changeFocus', 'updateInventoryField']);
 const props = defineProps({
   list: {
     type: Array,
     required: true,
   },
+  slotsCount: {
+    type: Number,
+    required: true,
+  },
 });
 
 const inventoryListDOM = ref();
+const numberItemsInRow = ref(undefined);
 
 const getItemIndex = (target) => {
   const targetId = target.getAttribute('data-id');
   const targetItem = props.list.find((item) => Number(targetId) === Number(item.id));
   const targetIndex = props.list.indexOf(targetItem);
   return targetIndex;
+};
+
+const moveItem = (indexFrom, indexTo, focusedElement) => {
+  const isValidMove = props.slotsCount > indexTo && indexTo >= 0;
+  if (isValidMove) {
+    const inventoryField = Array.from(props.list);
+    const elementFrom = inventoryField[indexFrom];
+    const elementTo = inventoryField[indexTo];
+
+    inventoryField[indexFrom] = elementTo;
+    inventoryField[indexTo] = elementFrom;
+
+    emit('updateInventoryField', inventoryField);
+
+    setTimeout(() => {
+      focusedElement.focus();
+    }, 1);
+  }
+};
+
+const moveItemKeyboardHandler = () => {
+  inventoryListDOM.value.addEventListener('keydown', (event) => {
+    const hotkeysIncrementValue = {
+      ArrowLeft: -1,
+      ArrowRight: 1,
+      ArrowUp: -numberItemsInRow.value,
+      ArrowDown: numberItemsInRow.value,
+    };
+
+    const pressedKeyboardButton = event.key;
+    const indexIncrement = hotkeysIncrementValue[pressedKeyboardButton];
+    if (indexIncrement) {
+      const { activeElement } = document;
+
+      const inventoryItemDOM = activeElement.parentNode;
+      const indexFrom = getItemIndex(inventoryItemDOM);
+      const indexTo = indexFrom + indexIncrement;
+
+      moveItem(indexFrom, indexTo, activeElement);
+    }
+  });
 };
 
 const focusHandler = () => {
@@ -28,7 +74,17 @@ const focusHandler = () => {
   });
 };
 
+const setNumberItemsInRow = () => {
+  const listWidth = inventoryListDOM.value.offsetWidth;
+  const itemWidth = inventoryListDOM.value.querySelector('li').offsetWidth;
+  numberItemsInRow.value = Math.round(listWidth / itemWidth);
+};
+
 onMounted(() => {
+  setNumberItemsInRow();
+  window.addEventListener('resize', setNumberItemsInRow);
+
+  moveItemKeyboardHandler();
   focusHandler();
 });
 
