@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onBeforeMount } from 'vue';
+import InventoryModal from '@components/InventoryModal.vue';
 import InventoryField from '@components/InventoryField.vue';
 import LazySkeleton from '@components/LazySkeleton.vue';
 
@@ -32,6 +33,16 @@ const setInventoryField = () => {
   });
 };
 
+const selectedItem = ref({});
+
+const changeItemCount = (newCount) => {
+  if (newCount > 0) {
+    selectedItem.value.properties.count = newCount;
+  } else {
+    delete selectedItem.value.properties;
+  }
+};
+
 onBeforeMount(() => {
   setInventoryField();
 });
@@ -40,11 +51,17 @@ onBeforeMount(() => {
 <template>
   <main class="page">
     <div class="page__container">
-      <section class="page__item" style="grid-area: modal" />
+      <InventoryModal
+        class="page__item"
+        style="grid-area: modal"
+        :item="selectedItem"
+        @changeItemCount="changeItemCount($event)"
+      />
       <InventoryField
         class="page__item"
         style="grid-area: field"
         :list="inventoryList"
+        @changeFocus="selectedItem = inventoryList[$event]"
       />
       <aside class="page__item page__alert" style="grid-area: alert">
         <LazySkeleton size="large" />
