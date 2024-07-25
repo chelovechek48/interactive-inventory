@@ -24,7 +24,7 @@ const getItemIndex = (target) => {
   return targetIndex;
 };
 
-const moveItem = (indexFrom, indexTo, focusedElement) => {
+const moveItem = (indexFrom, indexTo) => {
   const isValidMove = props.slotsCount > indexTo && indexTo >= 0;
   if (isValidMove) {
     const inventoryField = Array.from(props.list);
@@ -36,6 +36,7 @@ const moveItem = (indexFrom, indexTo, focusedElement) => {
 
     emit('updateInventoryField', inventoryField);
 
+    const focusedElement = document.activeElement;
     setTimeout(() => {
       focusedElement.focus();
     }, 1);
@@ -60,7 +61,27 @@ const moveItemKeyboardHandler = () => {
       const indexFrom = getItemIndex(inventoryItemDOM);
       const indexTo = indexFrom + indexIncrement;
 
-      moveItem(indexFrom, indexTo, activeElement);
+      moveItem(indexFrom, indexTo);
+    }
+  });
+};
+
+const moveItemMouseHandler = () => {
+  let indexFrom = null;
+  inventoryListDOM.value.addEventListener('focusin', (event) => {
+    const li = event.target.parentNode;
+    indexFrom = getItemIndex(li);
+  });
+  inventoryListDOM.value.addEventListener('focusout', () => {
+    indexFrom = null;
+  });
+  inventoryListDOM.value.addEventListener('mouseup', (event) => {
+    const { target } = event;
+    const li = target.tagName === 'LI' ? target : target.parentNode;
+    const hasIndexFrom = indexFrom !== null;
+    if (hasIndexFrom) {
+      const indexTo = getItemIndex(li);
+      moveItem(indexFrom, indexTo);
     }
   });
 };
@@ -85,6 +106,7 @@ onMounted(() => {
   window.addEventListener('resize', setNumberItemsInRow);
 
   moveItemKeyboardHandler();
+  moveItemMouseHandler();
   focusHandler();
 });
 
