@@ -2,14 +2,13 @@
 import { ref, onMounted, onUpdated } from 'vue';
 import ItemPicture from '@components/ItemPicture.vue';
 
+const emit = defineEmits(['changeFocus']);
 const props = defineProps({
   list: {
     type: Array,
     required: true,
   },
 });
-
-const emit = defineEmits(['changeFocus']);
 
 const inventoryListDOM = ref();
 
@@ -23,7 +22,9 @@ const getItemIndex = (target) => {
 const focusHandler = () => {
   inventoryListDOM.value.addEventListener('focusin', (event) => {
     const focusIndex = getItemIndex(event.target.parentNode);
-    emit('changeFocus', focusIndex);
+    const item = props.list[focusIndex];
+    item.dom = event.target;
+    emit('changeFocus', item);
   });
 };
 

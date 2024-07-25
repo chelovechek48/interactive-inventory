@@ -3,6 +3,7 @@ import { ref, onUpdated } from 'vue';
 import ItemPicture from '@components/ItemPicture.vue';
 import LazySkeleton from '@components/LazySkeleton.vue';
 
+const emit = defineEmits(['changeItemCount']);
 const props = defineProps({
   item: {
     type: Object,
@@ -10,27 +11,40 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['changeItemCount']);
-
-const deleteIsActive = ref();
+const numberCount = ref(null);
+const deleteIsActive = ref(false);
 const numberDOM = ref();
 
 const transitionDuration = 400;
+
+const showDeleteForm = () => {
+  deleteIsActive.value = true;
+  setTimeout(() => {
+    numberDOM.value.focus();
+  }, transitionDuration);
+};
+
+const hideDeleteForm = () => {
+  deleteIsActive.value = false;
+  numberCount.value = null;
+};
+
+let prevItem;
 onUpdated(() => {
-  if (deleteIsActive.value) {
-    setTimeout(() => {
-      numberDOM.value.focus();
-    }, transitionDuration);
+  const isNewItem = prevItem !== props.item;
+  if (isNewItem) {
+    prevItem = props.item;
+    hideDeleteForm();
   }
 });
-
-const numberCount = ref(null);
 
 const changeItemCount = (submit) => {
   submit.preventDefault();
 
   const { count } = props.item.properties;
   emit('changeItemCount', count - numberCount.value);
+
+  hideDeleteForm();
 };
 
 </script>
@@ -75,7 +89,7 @@ const changeItemCount = (submit) => {
           <button
             type="button"
             class="modal__button modal__button_color_red"
-            @click="deleteIsActive = true"
+            @click="showDeleteForm"
             :disabled="deleteIsActive"
           >
             Удалить предмет
@@ -85,7 +99,7 @@ const changeItemCount = (submit) => {
           <button
             type="button"
             class="modal__button modal__button_color_white"
-            @click="deleteIsActive = false"
+            @click="hideDeleteForm"
             :disabled="!deleteIsActive"
           >
             Отмена

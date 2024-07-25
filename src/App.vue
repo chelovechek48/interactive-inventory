@@ -38,6 +38,7 @@ const selectedItem = ref({});
 const changeItemCount = (newCount) => {
   if (newCount > 0) {
     selectedItem.value.properties.count = newCount;
+    selectedItem.value.dom.focus();
   } else {
     delete selectedItem.value.properties;
   }
@@ -61,7 +62,7 @@ onBeforeMount(() => {
         class="page__item"
         style="grid-area: field"
         :list="inventoryList"
-        @changeFocus="selectedItem = inventoryList[$event]"
+        @changeFocus="selectedItem = $event"
       />
       <aside class="page__item page__alert" style="grid-area: alert">
         <LazySkeleton size="large" />
