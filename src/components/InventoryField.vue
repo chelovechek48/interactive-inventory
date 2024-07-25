@@ -38,6 +38,7 @@ const moveItem = (indexFrom, indexTo) => {
 
     const focusedElement = document.activeElement;
     setTimeout(() => {
+      focusedElement.blur();
       focusedElement.focus();
     }, 1);
   }
