@@ -111,7 +111,7 @@ onMounted(() => {
 });
 
 onUpdated(() => {
-  const inventoryListstWithEmptyCells = props.list.map((inventoryItem, index) => {
+  const inventoryListWithEmptyCells = props.list.map((inventoryItem, index) => {
     const hasProperties = inventoryItem.properties;
     if (hasProperties) {
       const id = index;
@@ -121,8 +121,8 @@ onUpdated(() => {
     return null;
   });
 
-  const inventoryListstt = inventoryListstWithEmptyCells.filter((isItem) => (isItem));
-  localStorage.setItem('items', JSON.stringify(inventoryListstt));
+  const inventoryList = inventoryListWithEmptyCells.filter((isItem) => (isItem));
+  localStorage.setItem('items', JSON.stringify(inventoryList));
 });
 
 </script>
