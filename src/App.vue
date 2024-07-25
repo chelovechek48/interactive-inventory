@@ -16,10 +16,10 @@ const inventoryList = ref(Array.from(
 ));
 
 const setInventoryField = () => {
-  let inventoryItemsData = JSON.parse(localStorage.getItem('items'));
+  let inventoryItemsData = JSON.parse(localStorage.getItem('inventory-items'));
   if (!inventoryItemsData) {
     inventoryItemsData = inventoryItemsDataDefault;
-    localStorage.setItem('items', JSON.stringify(inventoryItemsDataDefault));
+    localStorage.setItem('inventory-items', JSON.stringify(inventoryItemsDataDefault));
   }
 
   inventoryItemsData.forEach((inventoryItem) => {

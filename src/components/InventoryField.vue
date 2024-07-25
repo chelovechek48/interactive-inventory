@@ -122,7 +122,7 @@ onUpdated(() => {
   });
 
   const inventoryList = inventoryListWithEmptyCells.filter((isItem) => (isItem));
-  localStorage.setItem('items', JSON.stringify(inventoryList));
+  localStorage.setItem('inventory-items', JSON.stringify(inventoryList));
 });
 
 </script>
