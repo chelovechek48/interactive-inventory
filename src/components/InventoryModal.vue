@@ -55,6 +55,7 @@ const changeItemCount = (submit) => {
     class="modal" :style="`--transition-duration: ${transitionDuration}ms;`"
   >
     <ItemPicture
+      class="modal__picture"
       margin="1.25rem"
       :color="item.properties.color"
     />
@@ -156,7 +157,12 @@ const changeItemCount = (submit) => {
     }
   }
 
+  &__picture {
+    margin-inline: clamp(0rem, 1.75vw, 1rem);
+  }
+
   &__image {
+    width: 100%;
     &-wrapper {
       position: relative;
       &::before {
@@ -168,7 +174,7 @@ const changeItemCount = (submit) => {
       }
 
     }
-    width: 100%;
+
     @media (min-width: calc($mobile + 1px)) {
       aspect-ratio: 200 / 240;
     }
