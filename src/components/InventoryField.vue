@@ -24,7 +24,7 @@ const getItemIndex = (target) => {
   return targetIndex;
 };
 
-const moveItem = (indexFrom, indexTo) => {
+const moveItem = (indexFrom, indexTo, makeFocus = false) => {
   const isValidMove = props.slotsCount > indexTo && indexTo >= 0;
   if (isValidMove) {
     const inventoryField = Array.from(props.list);
@@ -36,11 +36,13 @@ const moveItem = (indexFrom, indexTo) => {
 
     emit('updateInventoryField', inventoryField);
 
-    const focusedElement = document.activeElement;
-    setTimeout(() => {
-      focusedElement.blur();
-      focusedElement.focus();
-    }, 1);
+    if (makeFocus) {
+      const focusedElement = document.activeElement;
+      setTimeout(() => {
+        focusedElement.blur();
+        focusedElement.focus();
+      }, 1);
+    }
   }
 };
 
@@ -62,7 +64,7 @@ const moveItemKeyboardHandler = () => {
       const indexFrom = getItemIndex(inventoryItemDOM);
       const indexTo = indexFrom + indexIncrement;
 
-      moveItem(indexFrom, indexTo);
+      moveItem(indexFrom, indexTo, true);
     }
   });
 };
@@ -82,7 +84,30 @@ const moveItemMouseHandler = () => {
     const hasIndexFrom = indexFrom !== null;
     if (hasIndexFrom) {
       const indexTo = getItemIndex(li);
-      moveItem(indexFrom, indexTo);
+      moveItem(indexFrom, indexTo, true);
+    }
+  });
+};
+
+const moveItemTouchScreenHandler = () => {
+  let indexFrom = null;
+  inventoryListDOM.value.addEventListener('focusin', (event) => {
+    const li = event.target.parentNode;
+    indexFrom = getItemIndex(li);
+  });
+  inventoryListDOM.value.addEventListener('focusout', () => {
+    indexFrom = null;
+  });
+  inventoryListDOM.value.addEventListener('mousedown', (event) => {
+    const { target } = event;
+    const li = target.tagName === 'LI' ? target : target.parentNode;
+    const hasIndexFrom = indexFrom !== null;
+    if (hasIndexFrom) {
+      const indexTo = getItemIndex(li);
+      moveItem(indexFrom, indexTo, false);
+      setTimeout(() => {
+        document.activeElement.blur();
+      }, 1);
     }
   });
 };
@@ -142,10 +167,16 @@ onMounted(() => {
   setNumberItemsInRow();
   window.addEventListener('resize', setNumberItemsInRow);
 
-  moveItemKeyboardHandler();
-  moveItemMouseHandler();
+  const deviceHasTouch = window.matchMedia('(pointer: coarse)').matches;
+  if (deviceHasTouch) {
+    moveItemTouchScreenHandler();
+  } else {
+    moveItemKeyboardHandler();
+    moveItemMouseHandler();
+    grabHandler();
+  }
+
   focusHandler();
-  grabHandler();
 });
 
 onUpdated(() => {
@@ -194,7 +225,7 @@ onUpdated(() => {
 
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(clamp(4rem, 11.5vw, 6rem), 1fr));
-  gap: --grid-gap;
+  gap: $grid-gap;
 
   background-repeat: space;
   background-image:
@@ -213,30 +244,51 @@ onUpdated(() => {
 
     --padding: 20%;
 
-    &_grabed {
-      background-color: inherit;
-      position: fixed;
-      top: 0;
-      left: 0;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      z-index: 100;
-      box-shadow: 0 0 0 $grid-gap colors.$border;
-    }
-    &_opacity {
-      opacity: 0.35;
+    @media (pointer: fine) {
+      &_grabed {
+        z-index: 100;
+        position: fixed;
+        top: 0;
+        left: 0;
+        transform: translate(-50%, -50%);
+
+        background-color: inherit;
+        box-shadow: 0 0 0 $grid-gap colors.$border;
+        border-radius: 0.75rem;
+        pointer-events: none;
+      }
+      &_opacity {
+        opacity: 0.35;
+        transition: 400ms;
+      }
     }
   }
 
-  &__button:focus-visible {
-    outline-width: 4px;
-    outline-offset: -1px;
-    outline-color: colors.$border;
-    outline-style: solid;
-    z-index: 100;
+  &__button {
+    @mixin focused-button-styles {
+      outline-width: 4px;
+      outline-offset: -1px;
+      outline-color: colors.$border;
+      outline-style: solid;
+      z-index: 100;
+    }
+    @media (pointer: coarse) {
+      &:focus {
+        @include focused-button-styles;
+      }
+    }
+    @media (pointer: fine) {
+      &:focus-visible {
+        @include focused-button-styles;
+      }
+    }
   }
-  &__item_opacity &__button:focus-visible {
-    outline-style: dashed;
+  &__item_opacity &__button {
+    @media (pointer: fine) {
+      &:focus-visible {
+        outline-style: dashed;
+      }
+    }
   }
 
   &__count {
