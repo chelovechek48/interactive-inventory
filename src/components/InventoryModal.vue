@@ -128,6 +128,7 @@ const changeItemCount = (submit) => {
 
 <style lang="scss" scoped>
 @use '@vars/colors';
+@use '@vars/breakpoints' as *;
 
 .modal {
   $padding: 1rem;
@@ -149,7 +150,7 @@ const changeItemCount = (submit) => {
 
     &_long {
       margin-inline: -1rem;
-      @media (max-width: 32rem) {
+      @media (max-width: $mobile) {
         display: none;
       }
     }
@@ -168,10 +169,10 @@ const changeItemCount = (submit) => {
 
     }
     width: 100%;
-    @media (min-width: 32rem) {
+    @media (min-width: calc($mobile + 1px)) {
       aspect-ratio: 200 / 240;
     }
-    @media (max-width: 32rem) {
+    @media (max-width: $mobile) {
       aspect-ratio: 4 / 3;
     }
     object-fit: cover;
@@ -188,7 +189,7 @@ const changeItemCount = (submit) => {
     gap: inherit;
     overflow: hidden;
 
-    @media (min-width: 32rem) {
+    @media (min-width: calc($mobile + 1px)) {
       flex: 1 1 0;
       margin: -1rem;
       padding: 1rem;
@@ -199,10 +200,10 @@ const changeItemCount = (submit) => {
     display: flex;
     gap: $gap;
 
-    @media (min-width: 32rem) {
+    @media (min-width: calc($mobile + 1px)) {
       flex-direction: column;
     }
-    @media (max-width: 32rem) {
+    @media (max-width: $mobile) {
       flex-direction: column-reverse;
       order: -1;
     }
