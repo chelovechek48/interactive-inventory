@@ -141,6 +141,9 @@ const changeItemCount = (submit) => {
 
     &_long {
       margin-inline: -1rem;
+      @media (max-width: 32rem) {
+        display: none;
+      }
     }
   }
 

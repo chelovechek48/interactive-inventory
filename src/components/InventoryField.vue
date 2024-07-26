@@ -229,11 +229,14 @@ onUpdated(() => {
   }
 
   &__button:focus-visible {
-    outline: 4px solid colors.$border;
+    outline-width: 4px;
+    outline-offset: -1px;
+    outline-color: colors.$border;
+    outline-style: solid;
     z-index: 100;
   }
   &__item_opacity &__button:focus-visible {
-    outline: 4px dashed colors.$border;
+    outline-style: dashed;
   }
 
   &__count {
@@ -246,7 +249,8 @@ onUpdated(() => {
     right: 0;
 
     border-top-left-radius: 0.75rem;
-    box-shadow: inherit;
+    border-top: solid $grid-gap colors.$border;
+    border-left: solid $grid-gap colors.$border;
 
     display: flex;
     align-items: center;
