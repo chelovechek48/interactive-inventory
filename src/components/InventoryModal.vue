@@ -140,6 +140,7 @@ const changeItemCount = (submit) => {
         <img
           class="modal__image"
           src="@images/super-low-quality/modal-image@1x.jpg"
+          alt="светящиеся сущности в пещере"
           loading="lazy"
         >
       </picture>
