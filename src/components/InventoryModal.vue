@@ -118,7 +118,21 @@ const changeItemCount = (submit) => {
   </aside>
   <aside v-else class="modal">
     <div class="modal__image-wrapper">
-      <img class="modal__image" src="@images/modal-image.jpg" alt="">
+      <picture>
+        <source
+          type="image/avif"
+          srcset="@images/modal-image@1x.avif 1x, @images/modal-image@2x.avif 2x"
+        >
+        <source
+          type="image/webp"
+          srcset="@images/modal-image@1x.webp 1x, @images/modal-image@2x.webp 2x"
+        >
+        <source
+          type="image/png"
+          srcset="@images/modal-image@1x.png 1x, @images/modal-image@2x.png 2x"
+        >
+        <img class="modal__image" src="@images/modal-image@1x.png" loading="lazy">
+      </picture>
     </div>
     <div class="modal__text">
       <LazySkeleton size="large" />
