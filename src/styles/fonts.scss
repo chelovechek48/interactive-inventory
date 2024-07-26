@@ -3,9 +3,9 @@
   font-style: normal;
   font-weight: 400;
   src:
-    url('@fonts/SF-Pro-Display/SF-Pro-Display-400.woff2') format('woff2'),
-    url('@fonts/SF-Pro-Display/SF-Pro-Display-400.woff') format('woff'),
-    url('@fonts/SF-Pro-Display/SF-Pro-Display-400.ttf') format('truetype');
+    url('@fonts/SF-Pro-Display/SF-Pro-Display-400@subset.woff2') format('woff2'),
+    url('@fonts/SF-Pro-Display/SF-Pro-Display-400@subset.woff') format('woff'),
+    url('@fonts/SF-Pro-Display/SF-Pro-Display-400@subset.ttf') format('truetype');
 }
 
 * {
