@@ -121,17 +121,27 @@ const changeItemCount = (submit) => {
       <picture>
         <source
           type="image/avif"
-          srcset="@images/modal-image@1x.avif 1x, @images/modal-image@2x.avif 2x"
+          srcset="
+            @images/super-low-quality/modal-image@1x.avif 1x,
+            @images/super-low-quality/modal-image@2x.avif 2x"
         >
         <source
           type="image/webp"
-          srcset="@images/modal-image@1x.webp 1x, @images/modal-image@2x.webp 2x"
+          srcset="
+            @images/super-low-quality/modal-image@1x.webp 1x,
+            @images/super-low-quality/modal-image@2x.webp 2x"
         >
         <source
-          type="image/png"
-          srcset="@images/modal-image@1x.png 1x, @images/modal-image@2x.png 2x"
+          type="image/jpeg"
+          srcset="
+          @images/super-low-quality/modal-image@1x.jpg 1x,
+          @images/super-low-quality/modal-image@2x.jpg 2x"
         >
-        <img class="modal__image" src="@images/modal-image@1x.png" loading="lazy">
+        <img
+          class="modal__image"
+          src="@images/super-low-quality/modal-image@1x.jpg"
+          loading="lazy"
+        >
       </picture>
     </div>
     <div class="modal__text">
