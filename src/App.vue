@@ -109,8 +109,7 @@ onBeforeMount(() => {
   &__item {
     background-color: colors.$ui;
     border-radius: 0.75rem;
-    overflow: hidden;
-    border: 1px solid colors.$border;
+    box-shadow: 0 0 0 1px colors.$border inset;
   }
 
   &__alert {

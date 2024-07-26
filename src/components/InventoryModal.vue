@@ -126,6 +126,7 @@ const changeItemCount = (submit) => {
   $gap: 1rem;
   $button-height: 2.5em;
 
+  overflow: hidden;
   background-color: colors.$ui;
   padding: #{$padding};
   --padding: #{$padding};

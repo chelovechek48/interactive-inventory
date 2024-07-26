@@ -67,11 +67,5 @@ const hexToRgb = (hex) => {
     inset: 0 0 $margin-negative $margin-negative;
     background-color: rgb(var(--color));
   }
-
-  &:focus {
-    box-shadow: 0 0 0 4px colors.$border;
-    outline: none;
-    z-index: 100;
-  }
 }
 </style>

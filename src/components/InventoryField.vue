@@ -96,10 +96,46 @@ const focusHandler = () => {
   });
 };
 
+const grabHandler = () => {
+  let copy = null;
+  const setPosition = (event) => {
+    copy.style.top = `${event.clientY}px`;
+    copy.style.left = `${event.clientX}px`;
+  };
+
+  let li;
+  inventoryListDOM.value.addEventListener('mousedown', (event) => {
+    if (event.target.tagName === 'BUTTON') {
+      li = event.target.parentNode;
+      copy = li.cloneNode(true);
+      copy.classList.add('field__item_grabed');
+      copy.style.width = `${li.offsetWidth}px`;
+      copy.style.height = `${li.offsetHeight}px`;
+      copy.style.left = '200vw';
+
+      inventoryListDOM.value.appendChild(copy);
+
+      window.addEventListener('mousemove', setPosition);
+
+      li.classList.add('field__item_opacity');
+    }
+  });
+  inventoryListDOM.value.addEventListener('mouseup', () => {
+    if (copy !== null) {
+      copy.remove();
+      copy = null;
+      li.classList.remove('field__item_opacity');
+      window.removeEventListener('mousemove', setPosition);
+    }
+  });
+};
+
 const setNumberItemsInRow = () => {
   const listWidth = inventoryListDOM.value.offsetWidth;
-  const itemWidth = inventoryListDOM.value.querySelector('li').offsetWidth;
+  const itemWidth = inventoryListDOM.value.querySelector('li').getBoundingClientRect().width;
   numberItemsInRow.value = Math.round(listWidth / itemWidth);
+
+  inventoryListDOM.value.style.setProperty('--grid-item-width', `${itemWidth}px`);
 };
 
 onMounted(() => {
@@ -109,6 +145,7 @@ onMounted(() => {
   moveItemKeyboardHandler();
   moveItemMouseHandler();
   focusHandler();
+  grabHandler();
 });
 
 onUpdated(() => {
@@ -137,6 +174,7 @@ onUpdated(() => {
     >
       <ItemPicture
         v-if="item.properties"
+        class="field__button"
         tag="button"
         margin="0.375rem"
         :color="item.properties.color"
@@ -152,17 +190,50 @@ onUpdated(() => {
 @use '@vars/colors';
 
 .field {
+  $grid-gap: 1px;
+
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(clamp(4rem, 11.5vw, 6rem), 1fr));
-  gap: 1px;
+  gap: --grid-gap;
+
+  background-repeat: space;
+  background-image:
+    linear-gradient(to right, colors.$border $grid-gap, transparent 0px),
+    linear-gradient(to bottom, colors.$border $grid-gap, transparent 0px);
+
+  --grid-item-width: 100%;
+  background-size:
+    var(--grid-item-width)
+    var(--grid-item-width);
 
   &__item {
     position: relative;
     display: flex;
     aspect-ratio: 1;
-    box-shadow: 0 0 0 1px colors.$border;
 
     --padding: 20%;
+
+    &_grabed {
+      background-color: inherit;
+      position: fixed;
+      top: 0;
+      left: 0;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 100;
+      box-shadow: 0 0 0 $grid-gap colors.$border;
+    }
+    &_opacity {
+      opacity: 0.35;
+    }
+  }
+
+  &__button:focus-visible {
+    outline: 4px solid colors.$border;
+    z-index: 100;
+  }
+  &__item_opacity &__button:focus-visible {
+    outline: 4px dashed colors.$border;
   }
 
   &__count {
