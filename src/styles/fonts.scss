@@ -1,0 +1,13 @@
+@font-face {
+  font-family: 'SF Pro Display';
+  font-style: normal;
+  font-weight: 400;
+  src:
+    url('@fonts/SF-Pro-Display/SF-Pro-Display-400.woff2') format('woff2'),
+    url('@fonts/SF-Pro-Display/SF-Pro-Display-400.woff') format('woff'),
+    url('@fonts/SF-Pro-Display/SF-Pro-Display-400.ttf') format('truetype');
+}
+
+* {
+  font-family: 'SF Pro Display', sans-serif;
+}
