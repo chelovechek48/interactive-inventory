@@ -115,7 +115,15 @@ const changeItemCount = (submit) => {
       </div>
     </form>
   </aside>
-  <aside v-else />
+  <aside v-else class="modal">
+    <div class="modal__image-wrapper">
+      <img class="modal__image" src="@images/modal-image.jpg" alt="">
+    </div>
+    <div class="modal__text">
+      <LazySkeleton size="large" />
+      <LazySkeleton size="small" :rows="10" />
+    </div>
+  </aside>
 </template>
 
 <style lang="scss" scoped>
@@ -144,6 +152,33 @@ const changeItemCount = (submit) => {
       @media (max-width: 32rem) {
         display: none;
       }
+    }
+  }
+
+  &__image {
+    &-wrapper {
+      position: relative;
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: rgba(#fff, 0.1);
+        backdrop-filter: blur(5px);
+      }
+
+    }
+    width: 100%;
+    @media (min-width: 32rem) {
+      aspect-ratio: 200 / 240;
+    }
+    @media (max-width: 32rem) {
+      aspect-ratio: 4 / 3;
+    }
+    object-fit: cover;
+
+    &, &-wrapper::before {
+      border-radius: 0.5rem;
+      overflow: hidden;
     }
   }
 
